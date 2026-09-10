@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUST Assignment Cover Page Generator</title>
+    <!-- Modern premium font for UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Background decoration -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="app-container">
+        <!-- Editor Sidebar -->
+        <aside class="editor-panel no-print">
+            <div class="panel-header">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <h2>Cover Page Generator</h2>
+            </div>
+            
+            <button id="topPrintBtn" class="btn btn-primary top-print-btn"><i class="fa-solid fa-print"></i> Generate & Print PDF</button>
+            
+            <div class="form-section">
+                <h3><i class="fa-solid fa-book-open"></i> Assignment Details</h3>
+                <div class="form-group">
+                    <label for="assignmentTopic">Assignment Topic</label>
+                    <input type="text" id="assignmentTopic" value="Inflation and Unemployment">
+                </div>
+
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="courseName">Course Name</label>
+                        <input type="text" id="courseName" value="Principles of economics">
+                    </div>
+                    <div class="col">
+                        <label for="courseCode">Course Code</label>
+                        <input type="text" id="courseCode" value="ECO-03112103a">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fa-solid fa-chalkboard-user"></i> Submitted To</h3>
+                <div class="form-group">
+                    <label for="profName">Professor Name</label>
+                    <input type="text" id="profName" value="DR. Farhana Ahmed">
+                </div>
+                <div class="form-group">
+                    <label for="profTitle">Professor Designation</label>
+                    <input type="text" id="profTitle" value="Associate Professor">
+                </div>
+                <div class="form-group">
+                    <label for="profDept">Professor Department</label>
+                    <input type="text" id="profDept" value="Department of Economics, SUST">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fa-solid fa-users"></i> Submitted By</h3>
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="groupNumber">Group Number</label>
+                        <input type="text" id="groupNumber" value="Group 07">
+                    </div>
+                    <div class="col">
+                        <label for="semesterInfo">Semester Info</label>
+                        <input type="text" id="semesterInfo" value="2nd year 1st semester">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="studentDept">Student Department</label>
+                    <input type="text" id="studentDept" value="Department of Anthropology, SUST">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fa-solid fa-user-graduate"></i> Group Members</h3>
+                <div id="studentsList">
+                    <!-- Student rows will be injected here by JS -->
+                </div>
+                <button id="addStudentBtn" class="btn btn-secondary"><i class="fa-solid fa-plus"></i> Add Member</button>
+            </div>
+
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="submissionDate"><i class="fa-regular fa-calendar-days"></i> Submission Date</label>
+                    <input type="text" id="submissionDate" value="01.09.2026">
+                </div>
+            </div>
+
+            <button id="printBtn" class="btn btn-primary"><i class="fa-solid fa-print"></i> Generate & Print PDF</button>
+        </aside>
+
+        <!-- Live Preview Area -->
+        <main class="preview-panel">
+            <div class="a4-page" id="printArea">
+                <div class="cover-header">
+                    <img src="sust_logo.png" alt="SUST Logo" class="uni-logo">
+                    <h1 class="uni-name">Shahjalal University of Science and Technology, Sylhet</h1>
+                </div>
+
+                <div class="assignment-info">
+                    <p class="label-text">Assignment on:</p>
+                    <h2 class="topic-title" id="preview-topic">Inflation and Unemployment</h2>
+                    <p class="course-text">Course name: <span id="preview-course-name">Principles of economics</span></p>
+                    <p class="course-text">Course code: <span id="preview-course-code">ECO-03112103a</span></p>
+                </div>
+
+                <div class="submitted-to">
+                    <p class="section-title">Submitted to -</p>
+                    <p class="name" id="preview-prof-name">DR. Farhana Ahmed</p>
+                    <p class="title" id="preview-prof-title">Associate Professor</p>
+                    <p class="dept" id="preview-prof-dept">Department of Economics, SUST</p>
+                </div>
+
+                <div class="submitted-by">
+                    <p class="section-title">Submitted by –</p>
+                    <p class="group" id="preview-group">Group 07</p>
+                    <p class="semester" id="preview-semester">2<sup>nd</sup> year 1<sup>st</sup> semester</p>
+                    <p class="dept" id="preview-student-dept">Department of Anthropology, SUST</p>
+                </div>
+
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Reg No</th>
+                        </tr>
+                    </thead>
+                    <tbody id="preview-students-body">
+                        <!-- Student rows injected here by JS -->
+                    </tbody>
+                </table>
+
+                <div class="date-section">
+                    <p>Date: <span id="preview-date">01.09.2026</span></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Animated Watermark -->
+    <div class="watermark-badge no-print">
+        <span class="watermark-label">Powered By</span>
+        <span class="watermark-author">TOWHID</span>
+        <span class="watermark-dept">Dept of ANP (24-25)</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

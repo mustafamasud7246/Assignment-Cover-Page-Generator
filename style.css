@@ -1,0 +1,493 @@
+:root {
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --secondary-color: #10b981;
+    --bg-color: #f8fafc;
+    --panel-bg: rgba(255, 255, 255, 0.85);
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --focus-ring: rgba(79, 70, 229, 0.2);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.5;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Background Decorations */
+.bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -1;
+}
+
+.shape-1 {
+    width: 600px;
+    height: 600px;
+    background: rgba(79, 70, 229, 0.15);
+    top: -200px;
+    left: -200px;
+}
+
+.shape-2 {
+    width: 500px;
+    height: 500px;
+    background: rgba(16, 185, 129, 0.15);
+    bottom: -100px;
+    right: -100px;
+}
+
+/* App Layout */
+.app-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Editor Sidebar (Glassmorphism UI) */
+.editor-panel {
+    width: 420px;
+    background: var(--panel-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 30px;
+    overflow-y: auto;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+    color: var(--primary-color);
+}
+
+.panel-header i {
+    font-size: 1.5rem;
+}
+
+.panel-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.form-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.form-section h3 {
+    font-size: 1.05rem;
+    margin-bottom: 16px;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-section h3 i {
+    color: var(--primary-color);
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group.row {
+    display: flex;
+    gap: 12px;
+}
+
+.form-group.row .col {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #475569;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: 'Outfit', sans-serif;
+    color: #1e293b;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.student-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.student-row input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background: #f8fafc;
+}
+
+.student-row input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: #ffffff;
+}
+
+.remove-btn {
+    background: #fee2e2;
+    color: #ef4444;
+    border: none;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.remove-btn:hover {
+    background: #ef4444;
+    color: white;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Outfit', sans-serif;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    margin-top: 10px;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
+}
+
+.top-print-btn {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.btn-secondary {
+    background-color: #f1f5f9;
+    color: #334155;
+    margin-top: 12px;
+    font-size: 0.9rem;
+    padding: 10px;
+    border: 1px dashed #cbd5e1;
+}
+
+.btn-secondary:hover {
+    background-color: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+/* Preview Panel */
+.preview-panel {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px;
+    overflow-y: auto;
+    background-color: transparent;
+}
+
+/* A4 Page Styling (Matches PDF Exactly) */
+.a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background-color: white;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+    padding: 10mm 20mm 20mm 20mm;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #000;
+    box-sizing: border-box;
+}
+
+.cover-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.uni-logo {
+    width: 155px;
+    height: auto;
+    margin-bottom: 8px;
+}
+
+.uni-name {
+    font-size: 20px;
+    font-weight: normal;
+    font-style: italic;
+    margin-bottom: 18px;
+}
+
+.assignment-info {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.assignment-info .label-text {
+    font-size: 18px;
+    font-style: italic;
+    margin-bottom: 8px;
+}
+
+.assignment-info .topic-title {
+    font-size: 22px;
+    font-weight: bold;
+    font-style: italic;
+    margin-bottom: 12px;
+}
+
+.assignment-info .course-text {
+    font-size: 18px;
+    font-style: italic;
+    margin-bottom: 6px;
+}
+
+.submitted-to, .submitted-by {
+    text-align: center;
+    margin-bottom: 18px;
+    font-size: 18px;
+}
+
+.section-title {
+    font-weight: bold;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.submitted-to .name {
+    margin-bottom: 4px;
+}
+
+.submitted-to .title {
+    margin-bottom: 4px;
+}
+
+.submitted-to .dept {
+    font-style: italic;
+}
+
+.submitted-by .group {
+    font-style: italic;
+    margin-bottom: 6px;
+}
+
+.submitted-by .semester {
+    font-style: italic;
+    margin-bottom: 6px;
+}
+
+.submitted-by .dept {
+    font-style: italic;
+}
+
+/* Table Format */
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 16px;
+    font-size: 16px;
+}
+
+.students-table th, .students-table td {
+    border: 1px solid #000;
+    padding: 4px 10px;
+    text-align: left;
+}
+
+.students-table th {
+    font-style: italic;
+    font-weight: normal;
+    text-align: center;
+}
+
+.students-table td {
+    font-style: italic;
+}
+
+.date-section {
+    text-align: center;
+    font-size: 18px;
+    font-style: italic;
+    margin-top: 16px;
+}
+
+/* --- Print Styles --- */
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
+    html, body {
+        height: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden;
+    }
+
+    .no-print, .bg-shape {
+        display: none !important;
+    }
+
+    .app-container {
+        height: auto;
+        overflow: visible;
+        display: block;
+    }
+
+    .preview-panel {
+        padding: 0;
+        margin: 0;
+        background-color: white;
+        display: block;
+    }
+
+    .a4-page {
+        width: 210mm;
+        height: 297mm;
+        max-height: 297mm;
+        box-shadow: none;
+        padding: 10mm 20mm 20mm 20mm;
+        margin: 0 auto;
+        box-sizing: border-box;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+        overflow: hidden;
+    }
+}
+
+/* --- Animated Watermark Badge --- */
+.watermark-badge {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 10px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    z-index: 100;
+    animation: floatGlow 4s ease-in-out infinite alternate;
+    pointer-events: none;
+    user-select: none;
+}
+
+.watermark-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.watermark-author {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899, #6366f1);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShimmer 3s ease infinite;
+    line-height: 1.2;
+    margin: 2px 0;
+}
+
+.watermark-dept {
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+@keyframes floatGlow {
+    0% {
+        transform: translateY(0px);
+        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2);
+    }
+    100% {
+        transform: translateY(-8px);
+        box-shadow: 0 18px 35px rgba(236, 72, 153, 0.35);
+    }
+}
+
+@keyframes gradientShimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
