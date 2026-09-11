@@ -168,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             logo.style.width = `${logoWidth}px`;
             logo.style.height = `${logoHeight}px`;
             logo.style.border = '0';
+            logo.style.marginBottom = '22px';
         }
 
         clone.querySelectorAll('h1, h2, h3').forEach(heading => {
@@ -178,6 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const dateSection = clone.querySelector('.date-section');
+        if (dateSection) {
+            dateSection.style.marginTop = '30px';
+        }
         const dateHtml = dateSection ? dateSection.outerHTML : '';
         if (dateSection) dateSection.remove();
 
