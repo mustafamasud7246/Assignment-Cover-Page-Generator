@@ -183,9 +183,17 @@ document.addEventListener('DOMContentLoaded', () => {
             heading.replaceWith(p);
         });
 
+        // Add spacer paragraphs before date section to push it down
         const dateSection = clone.querySelector('.date-section');
-        const dateHtml = dateSection ? dateSection.outerHTML : '';
-        if (dateSection) dateSection.remove();
+        if (dateSection) {
+            for (let i = 0; i < 3; i++) {
+                const sp = document.createElement('p');
+                sp.style.fontSize = '10pt';
+                sp.style.lineHeight = '10pt';
+                sp.innerHTML = '&nbsp;';
+                dateSection.insertAdjacentElement('beforebegin', sp);
+            }
+        }
 
         const topic = document.getElementById('assignmentTopic')?.value.trim() || 'assignment-cover';
         const safeName = topic.replace(/[\\/:*?"<>|]/g, '').slice(0, 80) || 'assignment-cover';
@@ -273,18 +281,7 @@ p {
 </head>
 <body>
 <div class="WordSection1">
-<table class="page-fill" width="100%" cellspacing="0" cellpadding="0">
-<tr>
-<td valign="top" style="vertical-align:top; border:none;">
 ${clone.innerHTML}
-</td>
-</tr>
-<tr>
-<td valign="bottom" style="vertical-align:bottom; border:none;">
-${dateHtml}
-</td>
-</tr>
-</table>
 </div>
 </body>
 </html>`;
