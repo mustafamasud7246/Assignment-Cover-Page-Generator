@@ -225,6 +225,24 @@ body {
     margin-bottom: 20px;
 }
 
+.btn-doc {
+    background-color: #2563eb;
+    color: white;
+    margin-top: 10px;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+}
+
+.btn-doc:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+}
+
+#topDocBtn {
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
 .btn-secondary {
     background-color: #f1f5f9;
     color: #334155;

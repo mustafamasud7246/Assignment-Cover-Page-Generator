@@ -128,4 +128,174 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (printBtn) printBtn.addEventListener('click', triggerPrint);
     if (topPrintBtn) topPrintBtn.addEventListener('click', triggerPrint);
+
+    async function getLogoDataUrl() {
+        const logo = document.querySelector('#printArea .uni-logo');
+        if (!logo || !logo.src) return '';
+
+        try {
+            const response = await fetch(logo.src);
+            const blob = await response.blob();
+            return await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        } catch (error) {
+            return logo.src;
+        }
+    }
+
+    async function downloadDoc() {
+        const printArea = document.getElementById('printArea');
+        if (!printArea) return;
+
+        const clone = printArea.cloneNode(true);
+        const logo = clone.querySelector('.uni-logo');
+        const sourceLogo = document.querySelector('#printArea .uni-logo');
+        const logoWidth = 155;
+        const logoRatio = (sourceLogo?.naturalWidth && sourceLogo?.naturalHeight)
+            ? sourceLogo.naturalHeight / sourceLogo.naturalWidth
+            : 272 / 250;
+        const logoHeight = Math.round(logoWidth * logoRatio);
+        if (logo) {
+            const dataUrl = await getLogoDataUrl();
+            if (dataUrl) logo.src = dataUrl;
+            logo.setAttribute('width', String(logoWidth));
+            logo.setAttribute('height', String(logoHeight));
+            logo.setAttribute('border', '0');
+            logo.style.width = `${logoWidth}px`;
+            logo.style.height = `${logoHeight}px`;
+            logo.style.border = '0';
+        }
+
+        clone.querySelectorAll('h1, h2, h3').forEach(heading => {
+            const p = document.createElement('p');
+            p.className = heading.className;
+            p.innerHTML = heading.innerHTML;
+            heading.replaceWith(p);
+        });
+
+        const dateSection = clone.querySelector('.date-section');
+        const dateHtml = dateSection ? dateSection.outerHTML : '';
+        if (dateSection) dateSection.remove();
+
+        const topic = document.getElementById('assignmentTopic')?.value.trim() || 'assignment-cover';
+        const safeName = topic.replace(/[\\/:*?"<>|]/g, '').slice(0, 80) || 'assignment-cover';
+
+        const html = `
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>${safeName}</title>
+<!--[if gte mso 9]>
+<xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+@page WordSection1 {
+    size: 21cm 29.7cm;
+    margin: 10mm 20mm 18mm 20mm;
+    mso-header-margin: 0;
+    mso-footer-margin: 0;
+    mso-paper-source: 0;
+}
+div.WordSection1 { page: WordSection1; }
+body, p, div, td, th {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #000;
+    mso-margin-top-alt: 0;
+    mso-margin-bottom-alt: 0;
+}
+p {
+    margin: 0;
+    padding: 0;
+    line-height: 130%;
+}
+.page-fill {
+    width: 100%;
+    height: 258mm;
+    border: none;
+    border-collapse: collapse;
+}
+.page-fill td {
+    border: none;
+    padding: 0;
+}
+.cover-header, .assignment-info, .submitted-to, .submitted-by, .date-section {
+    text-align: center;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+.cover-header { margin-bottom: 15px; }
+.uni-logo { width: 155px; height: 169px; margin: 0 auto 22px; border: 0; }
+.uni-name { font-size: 20px; font-weight: normal; font-style: italic; margin: 0 0 18px; }
+.assignment-info { margin-bottom: 18px; }
+.label-text { font-size: 18px; font-style: italic; margin: 0 0 8px; }
+.course-text { font-size: 18px; font-style: italic; margin: 0 0 6px; }
+.topic-title { font-size: 22px; font-weight: bold; font-style: italic; margin: 0 0 12px; }
+.submitted-to, .submitted-by { font-size: 18px; margin-bottom: 18px; }
+.section-title { font-weight: bold; font-style: italic; margin: 0 0 10px; }
+.submitted-to .name, .submitted-to .title { margin: 0 0 4px; }
+.submitted-to .dept, .submitted-by .group, .submitted-by .semester, .submitted-by .dept, .date-section {
+    font-style: italic;
+}
+.submitted-by .group, .submitted-by .semester { margin: 0 0 6px; }
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 16px;
+    font-size: 16px;
+    page-break-before: avoid;
+    page-break-inside: avoid;
+}
+.students-table th, .students-table td {
+    border: 1px solid #000;
+    padding: 4px 10px;
+    text-align: left;
+    font-style: italic;
+}
+.students-table th { font-weight: normal; text-align: center; }
+.date-section { font-size: 18px; margin: 0; }
+</style>
+</head>
+<body>
+<div class="WordSection1">
+<table class="page-fill" width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td valign="top" style="vertical-align:top; border:none;">
+${clone.innerHTML}
+</td>
+</tr>
+<tr>
+<td valign="bottom" style="vertical-align:bottom; border:none;">
+${dateHtml}
+</td>
+</tr>
+</table>
+</div>
+</body>
+</html>`;
+
+        const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${safeName}.doc`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    const docBtn = document.getElementById('docBtn');
+    const topDocBtn = document.getElementById('topDocBtn');
+    if (docBtn) docBtn.addEventListener('click', downloadDoc);
+    if (topDocBtn) topDocBtn.addEventListener('click', downloadDoc);
 });
