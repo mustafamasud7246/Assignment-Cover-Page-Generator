@@ -168,7 +168,12 @@ document.addEventListener('DOMContentLoaded', () => {
             logo.style.width = `${logoWidth}px`;
             logo.style.height = `${logoHeight}px`;
             logo.style.border = '0';
-            logo.style.marginBottom = '22px';
+            // Add spacer after logo for Word DOC (Word ignores CSS margin on images)
+            const spacer = document.createElement('p');
+            spacer.style.fontSize = '10pt';
+            spacer.style.lineHeight = '10pt';
+            spacer.innerHTML = '&nbsp;';
+            logo.insertAdjacentElement('afterend', spacer);
         }
 
         clone.querySelectorAll('h1, h2, h3').forEach(heading => {
@@ -179,9 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const dateSection = clone.querySelector('.date-section');
-        if (dateSection) {
-            dateSection.style.marginTop = '30px';
-        }
         const dateHtml = dateSection ? dateSection.outerHTML : '';
         if (dateSection) dateSection.remove();
 
@@ -224,7 +226,7 @@ p {
 }
 .page-fill {
     width: 100%;
-    height: 258mm;
+    height: 250mm;
     border: none;
     border-collapse: collapse;
 }
