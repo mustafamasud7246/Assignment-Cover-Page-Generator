@@ -147,6 +147,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function escapeRtf(value) {
+        return String(value ?? '')
+            .replace(/\\/g, '\\\\')
+            .replace(/{/g, '\\{')
+            .replace(/}/g, '\\}')
+            .replace(/\r?\n/g, '\\line ')
+            .replace(/[^\x00-\x7f]/g, character => `\\u${character.charCodeAt(0)}?`);
+    }
+
+    function rtfParagraph(text, { center = true, italic = true, bold = false, size = 18, spaceAfter = 120, spaceBefore = 0 } = {}) {
+        const alignment = center ? '\\qc' : '\\ql';
+        const styles = `${bold ? '\\b' : ''}${italic ? '\\i' : ''}`;
+        const reset = `${bold ? '\\b0' : ''}${italic ? '\\i0' : ''}`;
+        return `\\pard${alignment}\\sb${spaceBefore}\\sa${spaceAfter}${styles}\\fs${size * 2} ${escapeRtf(text)}${reset}\\par`;
+    }
+
+    function rtfImage(dataUrl, width, height) {
+        const match = String(dataUrl).match(/^data:image\/(png|jpe?g);base64,(.+)$/i);
+        if (!match) return '';
+
+        const imageType = match[1].toLowerCase() === 'png' ? '\\pngblip' : '\\jpegblip';
+        const bytes = atob(match[2]);
+        let hex = '';
+        for (let index = 0; index < bytes.length; index++) {
+            hex += bytes.charCodeAt(index).toString(16).padStart(2, '0');
+        }
+
+        const widthTwips = Math.round(width * 15);
+        const heightTwips = Math.round(height * 15);
+        return `{\\pict${imageType}\\picwgoal${widthTwips}\\pichgoal${heightTwips}\n${hex}}`;
+    }
+
+    function rtfTableRow(name, reg, header = false) {
+        const style = header ? '\\i0' : '\\i';
+        return `\\trowd\\trrh260\\trgaph80\\trleft0\\clbrdrt\\brdrs\\brdrw10\\clbrdrl\\brdrs\\brdrw10\\clbrdrb\\brdrs\\brdrw10\\clbrdrr\\brdrs\\brdrw10\\cellx4500\\clbrdrt\\brdrs\\brdrw10\\clbrdrl\\brdrs\\brdrw10\\clbrdrb\\brdrs\\brdrw10\\clbrdrr\\brdrs\\brdrw10\\cellx9000\\intbl\\qc${style}\\fs24 ${escapeRtf(name)}\\cell\\intbl\\qc${style}\\fs24 ${escapeRtf(reg)}\\cell\\row`;
+    }
+
     async function downloadDoc() {
         const printArea = document.getElementById('printArea');
         if (!printArea) return;
@@ -154,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const clone = printArea.cloneNode(true);
         const logo = clone.querySelector('.uni-logo');
         const sourceLogo = document.querySelector('#printArea .uni-logo');
-        const logoWidth = 155;
+        const logoWidth = 140;
         const logoRatio = (sourceLogo?.naturalWidth && sourceLogo?.naturalHeight)
             ? sourceLogo.naturalHeight / sourceLogo.naturalWidth
             : 272 / 250;
@@ -187,8 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateSection = clone.querySelector('.date-section');
         if (dateSection) {
             const sp = document.createElement('p');
-            sp.style.fontSize = '8pt';
-            sp.style.lineHeight = '8pt';
+            sp.style.fontSize = '25px';
+            sp.style.lineHeight = '25px';
             sp.innerHTML = '&nbsp;';
             dateSection.insertAdjacentElement('beforebegin', sp);
         }
@@ -196,99 +233,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const topic = document.getElementById('assignmentTopic')?.value.trim() || 'assignment-cover';
         const safeName = topic.replace(/[\\/:*?"<>|]/g, '').slice(0, 80) || 'assignment-cover';
 
-        const html = `
-<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
-<head>
-<meta charset="utf-8">
-<title>${safeName}</title>
-<!--[if gte mso 9]>
-<xml>
-<w:WordDocument>
-<w:View>Print</w:View>
-<w:Zoom>100</w:Zoom>
-<w:DoNotOptimizeForBrowser/>
-</w:WordDocument>
-</xml>
-<![endif]-->
-<style>
-@page WordSection1 {
-    size: 21cm 29.7cm;
-    margin: 10mm 20mm 18mm 20mm;
-    mso-header-margin: 0;
-    mso-footer-margin: 0;
-    mso-paper-source: 0;
-}
-div.WordSection1 { page: WordSection1; }
-body, p, div, td, th {
-    font-family: Arial, Helvetica, sans-serif;
-    color: #000;
-    mso-margin-top-alt: 0;
-    mso-margin-bottom-alt: 0;
-}
-p {
-    margin: 0;
-    padding: 0;
-    line-height: 130%;
-}
-.page-fill {
-    width: 100%;
-    height: 253mm;
-    border: none;
-    border-collapse: collapse;
-}
-.page-fill td {
-    border: none;
-    padding: 0;
-}
-.cover-header, .assignment-info, .submitted-to, .submitted-by, .date-section {
-    text-align: center;
-    page-break-after: avoid;
-    page-break-inside: avoid;
-}
-.cover-header { margin-bottom: 15px; }
-.uni-logo { width: 155px; height: 169px; margin: 0 auto 22px; border: 0; }
-.uni-name { font-size: 20px; font-weight: normal; font-style: italic; margin: 0 0 18px; }
-.assignment-info { margin-bottom: 18px; }
-.label-text { font-size: 18px; font-style: italic; margin: 0 0 8px; }
-.course-text { font-size: 18px; font-style: italic; margin: 0 0 6px; }
-.topic-title { font-size: 22px; font-weight: bold; font-style: italic; margin: 0 0 12px; }
-.submitted-to, .submitted-by { font-size: 18px; margin-bottom: 18px; }
-.section-title { font-weight: bold; font-style: italic; margin: 0 0 10px; }
-.submitted-to .name, .submitted-to .title { margin: 0 0 4px; }
-.submitted-to .dept, .submitted-by .group, .submitted-by .semester, .submitted-by .dept, .date-section {
-    font-style: italic;
-}
-.submitted-by .group, .submitted-by .semester { margin: 0 0 6px; }
-.students-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 14px 0 16px;
-    font-size: 16px;
-    page-break-before: avoid;
-    page-break-inside: avoid;
-}
-.students-table th, .students-table td {
-    border: 1px solid #000;
-    padding: 4px 10px;
-    text-align: left;
-    font-style: italic;
-}
-.students-table th { font-weight: normal; text-align: center; }
-.date-section { font-size: 18px; margin: 0; }
-</style>
-</head>
-<body>
-<div class="WordSection1">
-${clone.innerHTML}
-</div>
-</body>
-</html>`;
+        const logoDataUrl = logo?.src || '';
+        const rtfParts = [
+            '{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Arial;}}\\paperw11906\\paperh16838\\margl1134\\margr1134\\margt567\\margb1020',
+            logoDataUrl ? `\\pard\\qc${rtfImage(logoDataUrl, logoWidth, logoHeight)}\\par` : '',
+            rtfParagraph('Shahjalal University of Science and Technology, Sylhet', { size: 18, spaceAfter: 280 }),
+            rtfParagraph('Assignment on:', { size: 16, spaceAfter: 80 }),
+            rtfParagraph(document.getElementById('assignmentTopic')?.value || '', { size: 20, bold: true, spaceAfter: 120 }),
+            rtfParagraph(`Course name: ${document.getElementById('courseName')?.value || ''}`, { size: 16, spaceAfter: 40 }),
+            rtfParagraph(`Course code: ${document.getElementById('courseCode')?.value || ''}`, { size: 16, spaceAfter: 160 }),
+            rtfParagraph('Submitted to -', { size: 16, bold: true, spaceAfter: 80 }),
+            rtfParagraph(document.getElementById('profName')?.value || '', { size: 16, spaceAfter: 40 }),
+            rtfParagraph(document.getElementById('profTitle')?.value || '', { size: 16, spaceAfter: 40 }),
+            rtfParagraph(document.getElementById('profDept')?.value || '', { size: 16, spaceAfter: 280 }),
+            rtfParagraph('Submitted by -', { size: 16, bold: true, spaceAfter: 80 }),
+            rtfParagraph(document.getElementById('groupNumber')?.value || '', { size: 16, spaceAfter: 40 }),
+            rtfParagraph(document.getElementById('semesterInfo')?.value || '', { size: 16, spaceAfter: 40 }),
+            rtfParagraph(document.getElementById('studentDept')?.value || '', { size: 16, spaceAfter: 280 }),
+            rtfTableRow('Name', 'Reg No', true),
+            ...students.map(student => rtfTableRow(student.name, student.reg)),
+            rtfParagraph(`Date: ${document.getElementById('submissionDate')?.value || ''}`, { size: 16, spaceBefore: 220, spaceAfter: 0 }),
+            '}'
+        ];
 
-        const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+        const blob = new Blob([rtfParts.join('')], { type: 'application/rtf' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `${safeName}.doc`;
+        link.download = `${safeName}.rtf`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

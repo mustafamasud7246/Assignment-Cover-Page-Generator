@@ -16,6 +16,10 @@
     padding: 0;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-color);
@@ -268,6 +272,128 @@ body {
     background-color: transparent;
 }
 
+/* --- Responsive Screen Layout --- */
+@media (max-width: 1100px) {
+    .editor-panel {
+        width: 360px;
+        padding: 24px;
+    }
+
+    .preview-panel {
+        padding: 24px;
+    }
+}
+
+@media (max-width: 760px) {
+    html {
+        overflow-x: hidden;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .app-container {
+        display: block;
+        height: auto;
+        overflow: visible;
+    }
+
+    .editor-panel {
+        width: 100%;
+        padding: 20px 16px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .panel-header {
+        margin-bottom: 20px;
+    }
+
+    .panel-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .form-section {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .form-group.row {
+        display: block;
+    }
+
+    .form-group.row .col + .col {
+        margin-top: 16px;
+    }
+
+    .form-group input,
+    .student-row input {
+        min-height: 44px;
+    }
+
+    .student-row {
+        gap: 6px;
+    }
+
+    .student-row input {
+        min-width: 0;
+        padding: 8px;
+    }
+
+    .preview-panel {
+        display: block;
+        padding: 20px 12px 80px;
+        overflow: visible;
+    }
+
+    .a4-page {
+        width: 100%;
+        min-height: 0;
+        padding: 8vw 7vw 10vw;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .uni-logo {
+        width: min(155px, 42vw);
+    }
+
+    .uni-name,
+    .assignment-info .label-text,
+    .assignment-info .course-text,
+    .submitted-to,
+    .submitted-by,
+    .date-section {
+        font-size: clamp(12px, 3.8vw, 18px);
+    }
+
+    .assignment-info .topic-title {
+        font-size: clamp(15px, 4.8vw, 22px);
+        overflow-wrap: anywhere;
+    }
+
+    .students-table {
+        font-size: clamp(11px, 3.4vw, 16px);
+        table-layout: fixed;
+    }
+
+    .students-table th,
+    .students-table td {
+        padding: 4px 6px;
+        overflow-wrap: anywhere;
+    }
+
+    .watermark-badge {
+        right: 12px;
+        bottom: 12px;
+        padding: 8px 12px;
+    }
+
+    .watermark-dept {
+        font-size: 0.65rem;
+    }
+}
+
 /* A4 Page Styling (Matches PDF Exactly) */
 .a4-page {
     width: 210mm;
@@ -392,6 +518,44 @@ body {
     margin-top: 16px;
 }
 
+@media (max-width: 760px) {
+    .a4-page {
+        width: 100%;
+        min-height: 0;
+        padding: 8vw 7vw 10vw;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .uni-logo {
+        width: min(155px, 42vw);
+    }
+
+    .uni-name,
+    .assignment-info .label-text,
+    .assignment-info .course-text,
+    .submitted-to,
+    .submitted-by,
+    .date-section {
+        font-size: clamp(12px, 3.8vw, 18px);
+    }
+
+    .assignment-info .topic-title {
+        font-size: clamp(15px, 4.8vw, 22px);
+        overflow-wrap: anywhere;
+    }
+
+    .students-table {
+        font-size: clamp(11px, 3.4vw, 16px);
+        table-layout: fixed;
+    }
+
+    .students-table th,
+    .students-table td {
+        padding: 4px 6px;
+        overflow-wrap: anywhere;
+    }
+}
+
 /* --- Print Styles --- */
 @media print {
     @page {
@@ -474,6 +638,7 @@ body {
     background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899, #6366f1);
     background-size: 300% 300%;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradientShimmer 3s ease infinite;
     line-height: 1.2;
