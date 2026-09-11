@@ -183,16 +183,14 @@ document.addEventListener('DOMContentLoaded', () => {
             heading.replaceWith(p);
         });
 
-        // Add spacer paragraphs before date section to push it down
+        // Add a small spacer before date section to push it down slightly
         const dateSection = clone.querySelector('.date-section');
         if (dateSection) {
-            for (let i = 0; i < 3; i++) {
-                const sp = document.createElement('p');
-                sp.style.fontSize = '10pt';
-                sp.style.lineHeight = '10pt';
-                sp.innerHTML = '&nbsp;';
-                dateSection.insertAdjacentElement('beforebegin', sp);
-            }
+            const sp = document.createElement('p');
+            sp.style.fontSize = '8pt';
+            sp.style.lineHeight = '8pt';
+            sp.innerHTML = '&nbsp;';
+            dateSection.insertAdjacentElement('beforebegin', sp);
         }
 
         const topic = document.getElementById('assignmentTopic')?.value.trim() || 'assignment-cover';
